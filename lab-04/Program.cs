@@ -1,4 +1,6 @@
-﻿class Program
+﻿using System.Globalization;
+
+class Program
 {
     public static void Main()
     {
@@ -79,6 +81,31 @@
         zad4.ForEach(Console.WriteLine);
 
         System.Console.WriteLine("\nDla każdego pracownika wypisz liczbę dokonanych przez niego zamówień, średnią wartość zamówienia oraz maksymalną wartość zamówienia: ");
-        
+        List<Order> orders = CsvLoader<Order>.loadList("./data/orders.csv");
+        List<OrderDetail> orderDetails = CsvLoader<OrderDetail>.loadList("./data/orders_details.csv");
+        var zad5 = employees.GroupJoin(orders,
+            e=>e.employeeid,
+            o=>o.employeeid,
+            (e, orders)=>new 
+            {
+                e.lastname, 
+                orders = orders.Join(orderDetails,
+                    o=>o.orderid,
+                    od=>od.orderid,
+                    (o, od)=> Double.Parse(od.unitprice, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture)
+                                *Double.Parse(od.quantity, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture)
+                                *(1-Double.Parse(od.discount, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture))
+                )
+            }
+        )
+        .Select(o=>new {
+            o.lastname,
+            count = o.orders.Count(),
+            avg = Math.Round(o.orders.Average(), 2),
+            max = Math.Round(o.orders.Max(), 2)
+        })
+        .Select(o=>$"{o.lastname}: count={o.count}, avg=${o.avg}, max=${o.max}")
+        .ToList();
+        zad5.ForEach(Console.WriteLine);
     }
 }
