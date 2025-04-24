@@ -2,11 +2,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace zad01;
+namespace client;
 
-public class Client
+public static class Client
 {
-    public static void Main(string []args)
+    private static void StartClient()
     {
         var host = Dns.GetHostEntry("localhost");
         var ipAddress = host.AddressList[0];
@@ -17,6 +17,7 @@ public class Client
             SocketType.Stream, 
             ProtocolType.Tcp
         );
+        
         socket.Connect(localEndPoint);
 
         const string message = "Wiadomość od klienta";
@@ -27,6 +28,7 @@ public class Client
         var bytesCount = socket.Receive(bufor, SocketFlags.None);
         var serverResponse = Encoding.UTF8.GetString(bufor, 0, bytesCount);
         Console.WriteLine(serverResponse);
+        
         try
         {
             socket.Shutdown(SocketShutdown.Both);
@@ -34,7 +36,12 @@ public class Client
         }
         catch
         {
-            throw new Exception("Cannot shutdown client!");
+            // ignored
         }
+    }
+
+    public static void Main(string []args)
+    {
+        StartClient();
     }
 }
