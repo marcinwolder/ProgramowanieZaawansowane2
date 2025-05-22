@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace lab_09.Controllers;
 
@@ -11,7 +12,6 @@ public class Auth : Controller
     [HttpPost]
     public IActionResult Login(IFormCollection form)
     {
-        Console.WriteLine("Login: " + HttpContext.Session.Keys.Contains("LoggedIn"));
         if (String.IsNullOrEmpty(form["email"]) || String.IsNullOrEmpty(form["password"]))
         {
             return View();
@@ -27,6 +27,14 @@ public class Auth : Controller
             return RedirectToAction("success", "auth");
         }
         // return View();
+    }
+
+    [SessionAuthorize]
+    public ActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+        return RedirectToAction("Index", "Home");
+
     }
 
     public IActionResult Success()

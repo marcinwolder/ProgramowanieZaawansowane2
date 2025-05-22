@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="~/Airly.styles.css" asp-append-version="true" />
 </head>
 <body>
+@{
+    var isLoggedIn = (HttpContextAccessor.HttpContext?.Session.GetInt32("LoggedIn") ?? 0) == 1;
+    var email = HttpContextAccessor.HttpContext?.Session.GetString("Email");
+}
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -25,19 +29,30 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @if (!isLoggedIn)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark btn btn-sm btn-outline-info text-primary mx-2" asp-area="" asp-controller="Travel" asp-action="Index">See our travel oportunities ✈</a>
+                            </li>
+                        }
                     </ul>
                 </div>
-                @{
-                    var isLoggedIn = HttpContextAccessor.HttpContext?.Session.GetString("LoggedIn");
-                }
 
-                @if (isLoggedIn != null)
+                @if (isLoggedIn)
                 {
-                    <div class="logged-in-info">
-                        Użytkownik jest zalogowany!
+                    <div class="d-flex justify-content-center align-items-center gap-2">
+                        <div class="logged-in-info">
+                            <a href="@Url.Action("Logout", "Auth")" class="btn">Wyloguj się</a>
+                        </div>
+                        <div class="logged-in-info">
+                            @email
+                        </div>
                     </div>
                 }
             </div>
@@ -51,7 +66,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - Airly - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - Airly
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
