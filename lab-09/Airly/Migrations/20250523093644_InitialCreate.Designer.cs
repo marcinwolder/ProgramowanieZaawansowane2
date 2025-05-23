@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Airly.Migrations
 {
     [DbContext(typeof(AirlyContext))]
-    [Migration("20250523075205_InitialCreate")]
+    [Migration("20250523093644_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -43,6 +43,24 @@ namespace Airly.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Destination");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "Kraków",
+                            Description = "Kraków, officially the Royal Capital City of Kraków, is the second-largest and one of the oldest cities in Poland. Situated on the Vistula River in Lesser Poland Voivodeship, the city has a population of 804,237 (2023), with approximately 8 million additional people living within a 100 km (62 mi) radius.",
+                            ImgUrl = "https://media.krakow.travel/photos/18784/xxl.jpg",
+                            Price = 150
+                        },
+                        new
+                        {
+                            Id = 2,
+                            City = "London",
+                            Description = "London is the capital and largest city of both England and the United Kingdom, with a population of 8,866,180 in 2022. Its wider metropolitan area is the largest in Western Europe, with a population of 14.9 million.",
+                            ImgUrl = "https://res.cloudinary.com/aenetworks/image/upload/c_fill,ar_2,w_3840,h_1920,g_auto/dpr_auto/f_auto/q_auto:eco/v1/topic-london-gettyimages-760251843-feature?_a=BAVAZGDX0",
+                            Price = 200
+                        });
                 });
 
             modelBuilder.Entity("Airly.Models.User", b =>
@@ -62,6 +80,14 @@ namespace Airly.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "test@test.test",
+                            Password = "cc03e747a6afbbcbf8be7668acfebee5"
+                        });
                 });
 #pragma warning restore 612, 618
         }
