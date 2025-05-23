@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Airly.Models;
 
-public class UserModel
+public class User
 {
     [Key]
     public int Id { get; set; }

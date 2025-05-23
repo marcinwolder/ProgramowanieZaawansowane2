@@ -1,4 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Airly.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<AirlyContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("AirlyContext") ?? throw new InvalidOperationException("Connection string 'AirlyContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
