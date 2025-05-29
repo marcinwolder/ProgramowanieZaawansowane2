@@ -1,0 +1,26 @@
+@model IEnumerable<Airly.Models.Destination>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<h2>Our travel options:</h2>
+
+<div class="d-flex gap-4">
+    @foreach (var item in Model){
+        <div class="card" style="width: 18rem;">
+        <img src="@item.ImgUrl" class="card-img-top" alt="@item.City">
+        <div class="card-body">
+            <h5 class="card-title">@item.City</h5>
+            <p class="card-text">@item.Description</p>
+            <a href="#" class="btn btn-primary">Buy ticket now!</a>
+        </div>
+        </div>
+    }
+</div>
