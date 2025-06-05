@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Airly.Data;
 using Airly.Models;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Airly.Controllers
 {
@@ -58,15 +61,39 @@ namespace Airly.Controllers
         [AdminOnly]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Email,PasswordHash")] User user)
+        // IFormCollection form
+        // public async Task<IActionResult> Create([Bind("Id,Email,PasswordHash")] User user)
+        public async Task<IActionResult> Create(IFormCollection form)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(form["Email"]) || string.IsNullOrEmpty(form["Password"]))
             {
+                string password = form["Password"]!;
+                string email = form["Email"]!;
+                
+                var existingUser = await _context.Users.FirstOrDefaultAsync(m => m.Email == email);
+                if (existingUser != null) return View();
+                
+                var inputBytes = Encoding.UTF8.GetBytes(password);
+                var hashBytes = MD5.HashData(inputBytes);
+
+                StringBuilder sb = new();
+                foreach (var t in hashBytes)
+                {
+                    sb.Append(t.ToString("x2"));
+                }
+                var hashPassword = sb.ToString();
+                
+                var user  = new User()
+                {
+                    Email = form["email"]!,
+                    PasswordHash = hashPassword
+                };
+                if (!ModelState.IsValid) return View(user);
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return RedirectToAction(nameof(Create));
         }
 
         // GET: User/Edit/5

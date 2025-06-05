@@ -37,10 +37,11 @@
                 @Html.DisplayFor(modelItem => item.WebsiteUrl)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MapUrl)
+                <a href="@item.MapUrl">[LINK]</a>
+                @* @Html.DisplayFor(modelItem => item.MapUrl) *@
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Location.Id)
+                @Html.DisplayFor(modelItem => item.Location!.City)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

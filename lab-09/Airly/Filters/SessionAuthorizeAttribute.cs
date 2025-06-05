@@ -5,7 +5,7 @@ public class SessionAuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var isLoggedIn = (context.HttpContext.Session.GetInt32("LoggedIn") ?? 0) == 1;
+        var isLoggedIn = (context.HttpContext.Session.GetInt32("IsLoggedIn") ?? 0) == 1;
 
         if (!isLoggedIn)
         {

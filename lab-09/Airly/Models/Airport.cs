@@ -16,7 +16,8 @@ public class Airport
     public string? WebsiteUrl { get; set; }
     [Url]
     public string? MapUrl { get; set; }
-    public required Location Location { get; set; }
+    
+    public Location? Location { get; set; }
     public ICollection<Connection>? DepartingConnections { get; set; } = new List<Connection>();
     public ICollection<Connection>? ArrivingConnections  { get; set; } = new List<Connection>();
 }

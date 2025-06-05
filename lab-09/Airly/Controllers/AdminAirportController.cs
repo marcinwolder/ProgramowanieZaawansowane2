@@ -51,17 +51,24 @@ namespace Airly.Controllers
         [AdminOnly]
         public IActionResult Create()
         {
-            ViewData["LocationId"] = new SelectList(_context.Locations, "Id", "Id");
+            var locations = _context.Locations
+                .Select(l => new
+                {
+                    l.Id,
+                    Text = $"({l.Id}) {l.City} – {l.Country}"
+                })
+                .ToList();
+
+            ViewData["LocationId"] = new SelectList(locations, "Id", "Text");
             return View();
         }
 
         // POST: Airport/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [AdminOnly]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,LocationId,Name,WebsiteUrl,MapUrl")] Airport airport)
+        public async Task<IActionResult> Create(
+            [Bind("LocationId,Name,WebsiteUrl,MapUrl")] Airport airport)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +76,20 @@ namespace Airly.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LocationId"] = new SelectList(_context.Locations, "Id", "Id", airport.LocationId);
+
+            // ↓ odbudowujemy drop-down dokładnie tak samo jak w GET
+            ViewData["LocationId"] = new SelectList(
+                _context.Locations
+                    .Select(l => new
+                    {
+                        l.Id,
+                        Text = $"{l.City} – {l.Country}"
+                    })
+                    .ToList(),
+                "Id",
+                "Text",
+                airport.LocationId);      // zaznacz wybraną pozycję
+
             return View(airport);
         }
 
