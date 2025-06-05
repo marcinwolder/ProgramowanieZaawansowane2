@@ -41,7 +41,7 @@ public class AuthController : Controller
         password = sb.ToString();
         Console.WriteLine(password);
 
-        var destination = await _context.User.FirstOrDefaultAsync(m => m.Email == email && m.Password == password);
+        var destination = await _context.Users.FirstOrDefaultAsync(m => m.Email == email && m.PasswordHash == password);
         if (destination != null)
         {
             HttpContext.Session.SetInt32("LoggedIn", 1);

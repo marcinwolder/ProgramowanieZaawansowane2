@@ -1,13 +1,10 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace Airly.Models;
+﻿namespace Airly.Models;
 
 public class Ticket
 {
-    [Key]
-    public int Id { get; set; }
-    required public int Quantity { get; set; }
-    public ICollection<User> ?Users { get; set; }
-    public int DestinationId { get; set; }
-    required public Destination Destination { get; set; } = null!;
+    public int TravelerId   { get; set; }
+    public int ConnectionId { get; set; }
+
+    public required Traveler Traveler  { get; set; }
+    public required Connection Connection { get; set; }
 }

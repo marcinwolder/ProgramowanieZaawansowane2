@@ -14,6 +14,7 @@
 <body>
 @{
     var isLoggedIn = (HttpContextAccessor.HttpContext?.Session.GetInt32("LoggedIn") ?? 0) == 1;
+    var isAdmin = (HttpContextAccessor.HttpContext?.Session.GetString("Email") ?? "") == "admin@airly.com";
     var email = HttpContextAccessor.HttpContext?.Session.GetString("Email");
 }
     <header>
