@@ -10,6 +10,7 @@ using Airly.Models;
 
 namespace Airly.Controllers
 {
+    [AdminOnly]
     public class AdminTicketController : Controller
     {
         private readonly AirlyContext _context;
@@ -20,7 +21,6 @@ namespace Airly.Controllers
         }
 
         // GET: Ticket
-        [AdminOnly]
         public async Task<IActionResult> Index()
         {
             var airlyContext = _context.Tickets.Include(t => t.Connection).Include(t => t.Traveler);
@@ -28,7 +28,6 @@ namespace Airly.Controllers
         }
 
         // GET: Ticket/Details/5
-        [AdminOnly]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -49,7 +48,6 @@ namespace Airly.Controllers
         }
 
         // GET: Ticket/Create
-        [AdminOnly]
         public IActionResult Create()
         {
             ViewData["ConnectionId"] = new SelectList(_context.Connections, "Id", "Id");
@@ -60,7 +58,6 @@ namespace Airly.Controllers
         // POST: Ticket/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [AdminOnly]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TravelerId,ConnectionId")] Ticket ticket)
@@ -77,7 +74,6 @@ namespace Airly.Controllers
         }
 
         // GET: Ticket/Edit/5
-        [AdminOnly]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,7 +94,6 @@ namespace Airly.Controllers
         // POST: Ticket/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [AdminOnly]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("TravelerId,ConnectionId")] Ticket ticket)
@@ -134,7 +129,6 @@ namespace Airly.Controllers
         }
 
         // GET: Ticket/Delete/5
-        [AdminOnly]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -155,7 +149,6 @@ namespace Airly.Controllers
         }
 
         // POST: Ticket/Delete/5
-        [AdminOnly]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

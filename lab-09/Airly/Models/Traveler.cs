@@ -13,6 +13,6 @@ public class Traveler
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     
-    public required User User { get; set; }
+    public User? User { get; set; }
     public ICollection<Ticket>? Tickets { get; set; } = new List<Ticket>();
 }

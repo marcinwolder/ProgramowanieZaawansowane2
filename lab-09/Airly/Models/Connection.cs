@@ -13,8 +13,8 @@ public class Connection
     public int ToAirportId { get; set; }
     
     public int NumberOfSlots { get; set; }
-    
-    public required Airport FromAirport { get; set; }
-    public required Airport ToAirport   { get; set; }
+
+    public Airport? FromAirport { get; set; }
+    public Airport? ToAirport { get; set; }
     public ICollection<Ticket>? Tickets { get; set; } = new List<Ticket>();
 }
