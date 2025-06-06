@@ -30,25 +30,23 @@ public class AuthController : Controller
         string email = form["email"]!;
         string password = form["password"]!;
 
-        byte[] inputBytes = Encoding.UTF8.GetBytes(password);
-        byte[] hashBytes = MD5.HashData(inputBytes);
+        var inputBytes = Encoding.UTF8.GetBytes(password);
+        var hashBytes = MD5.HashData(inputBytes);
 
         StringBuilder sb = new();
-        for (int i = 0; i < hashBytes.Length; i++)
+        foreach (var t in hashBytes)
         {
-            sb.Append(hashBytes[i].ToString("x2"));
+            sb.Append(t.ToString("x2"));
         }
-        password = sb.ToString();
-        Console.WriteLine(password);
+        var hashPassword = sb.ToString();
 
-        var destination = await _context.User.FirstOrDefaultAsync(m => m.Email == email && m.Password == password);
-        if (destination != null)
-        {
-            HttpContext.Session.SetInt32("LoggedIn", 1);
-            HttpContext.Session.SetString("Email", email);
-            return RedirectToAction("success", "auth");
-        }
-        return View();
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.PasswordHash == hashPassword);
+        if (user == null) return View();
+        HttpContext.Session.SetInt32("IsLoggedIn", 1);
+        HttpContext.Session.SetInt32("IsAdmin", (email == "admin@airly.com")? 1 : 0);
+        HttpContext.Session.SetInt32("UserId", user.Id);
+        HttpContext.Session.SetString("Email", email);
+        return RedirectToAction("success", "auth");
     }
 
     [SessionAuthorize]

@@ -1,0 +1,38 @@
+﻿@model Airly.ViewModels.TicketPurchaseVM
+@{
+    ViewData["Title"] = "Buy ticket";
+}
+
+<div class="container py-4">
+    <h2>@ViewData["Title"]</h2>
+
+    <h5>
+        @Model.Connection.FromAirport!.Name
+        <span class="mx-1">→</span>
+        @Model.Connection.ToAirport!.Name
+    </h5>
+
+    <form asp-action="Buy" method="post" class="mt-4">
+        <input type="hidden" asp-for="ConnectionId" />
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="TravelerId" class="form-label">Passenger</label>
+            <select asp-for="TravelerId"
+                    asp-items="@(new SelectList(Model.Travelers
+                                       .Select(t => new { t.Id, Name = $"{t.FirstName} {t.LastName}" }),
+                                   "Id",
+                                   "Name"))"
+                    class="form-select">
+                <option value="">-- choose passenger --</option>
+            </select>
+            <span asp-validation-for="TravelerId" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Confirm purchase</button>
+        <a asp-action="Index" asp-controller="Ticket" class="btn btn-secondary ms-2">
+            Cancel
+        </a>
+    </form>
+</div>

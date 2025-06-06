@@ -13,7 +13,8 @@
 </head>
 <body>
 @{
-    var isLoggedIn = (HttpContextAccessor.HttpContext?.Session.GetInt32("LoggedIn") ?? 0) == 1;
+    var isLoggedIn = (HttpContextAccessor.HttpContext?.Session.GetInt32("IsLoggedIn") ?? 0) == 1;
+    var isAdmin = (HttpContextAccessor.HttpContext?.Session.GetInt32("IsAdmin") ?? 0) == 1;
     var email = HttpContextAccessor.HttpContext?.Session.GetString("Email");
 }
     <header>
@@ -38,7 +39,16 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark btn btn-sm btn-outline-info text-primary mx-2" asp-area="" asp-controller="Destination" asp-action="Index">See our travel oportunities ✈</a>
+                                <a class="nav-link text-dark btn btn-sm btn-outline-info text-primary mx-2" asp-area="" asp-controller="Ticket" asp-action="Index">See our travel opportunities ✈</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Traveler" asp-action="Index">Manage Passengers 👤</a>
+                            </li>
+                        }
+                        @if (isAdmin)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-danger btn-sm text-white" asp-area="" asp-controller="AdminPanel" asp-action="Index">Admin Panel</a>
                             </li>
                         }
                     </ul>

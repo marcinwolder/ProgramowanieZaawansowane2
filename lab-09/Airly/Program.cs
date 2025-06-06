@@ -30,6 +30,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+
 app.Use(async (ctx, next) =>
 {
     await next();
@@ -46,7 +47,6 @@ app.UseSession();
 
 app.UseRouting();
 app.UseAuthorization();
-
 
 app.MapControllerRoute(
     name: "default",

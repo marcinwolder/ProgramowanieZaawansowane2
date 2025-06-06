@@ -1,7 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Location mostCommonLocation = @ViewBag.MostCommonDestination.Location;
 }
 
 <div class="text-center">
     <h1 class="display-4">Airly</h1>
+    <h2>We sold <b>@ViewData["TicketCount"]</b> tickets</h2>
+    <h2>Our clients like to visit <b>@ViewBag.MostCommonDestination.City</b></h2>
+    <img src="@mostCommonLocation.ImgUrl" alt="MostCommonDestinationCityImage">
 </div>

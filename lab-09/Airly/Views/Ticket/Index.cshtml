@@ -1,0 +1,129 @@
+@using System.Linq
+@model Airly.ViewModels.ConnectionSearchVM
+
+@{
+    ViewBag.Title = "Tickets";
+    Layout = "_Layout";
+    // var airports = (SelectList)(ViewData["Airports"] ?? ""); 
+}
+
+<div class="container py-4">
+    <h2>@ViewData["Title"]</h2>
+
+    @if (Model.Tickets.Any())
+    {
+        <div class="alert alert-success">
+            <h5 class="mb-3">Your tickets</h5>
+            <table class="table table-sm mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>Passenger</th>
+                    <th>From</th>
+                    <th>To</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var t in Model.Tickets)
+                {
+                    <tr>
+                        <td>@t.Passenger</td>
+                        <td>@t.FromAirport</td>
+                        <td>@t.ToAirport</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    
+    <div class="row mb-3">
+        <!-- DEPARTURE -->
+        <div class="col-md-4">
+            <label class="form-label">Departure airport (A)</label>
+            <select id="fromAirport" class="form-select"
+                    asp-items="Model.DepartureAirports">
+                <option value="">-- choose --</option>
+            </select>
+        </div>
+
+        <!-- DESTINATION -->
+        <div class="col-md-4">
+            <label class="form-label">Destination airport (B)</label>
+            <select id="toAirport" class="form-select" disabled>
+                <option value="">-- any --</option>
+            </select>
+        </div>
+    </div>
+
+    <h4>Connections</h4>
+    <table class="table table-sm" id="connTable">
+        <thead class="table-light">
+        <tr>
+            <th>#</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Slots</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody><!-- filled by JS --></tbody>
+    </table>
+</div>
+
+@section Scripts {
+<script>
+const fromSel = document.getElementById('fromAirport');
+const toSel   = document.getElementById('toAirport');
+const tbody   = document.querySelector('#connTable tbody');
+
+fromSel.addEventListener('change', async () => {
+    tbody.innerHTML = '';
+    toSel.innerHTML = '<option value="">-- any --</option>';
+    toSel.disabled  = true;
+
+    const fromId = fromSel.value;
+    if (!fromId) return;
+
+    const destUrl = `/Ticket/GetDestinations?from=${fromId}`;
+    const destRes = await fetch(destUrl);
+    const destData = await destRes.json();
+
+    // wypełniamy <select> B
+    destData.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.text  = d.name;
+        toSel.appendChild(opt);
+    });
+    toSel.disabled = false;
+    loadConnections();
+});
+
+toSel.addEventListener('change', loadConnections);
+
+async function loadConnections() {
+    const fromId = fromSel.value;
+    if (!fromId) return;
+
+    const url = `/Ticket/GetConnections?from=${fromId}` +
+                (toSel.value ? `&to=${toSel.value}` : '');
+
+    const res  = await fetch(url);
+    const data = await res.json();
+
+    tbody.innerHTML = data.map(c => `
+    <tr>
+        <td>${c.id}</td>
+        <td>${c.from}</td>
+        <td>${c.to}</td>
+        <td>${c.numberOfSlots}</td>
+        <td>
+            <a href="/Ticket/Buy?connectionId=${c.id}"
+               class="btn btn-sm btn-primary">
+               Buy
+            </a>
+        </td>
+    </tr>`).join('');
+}
+</script>
+}

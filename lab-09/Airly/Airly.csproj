@@ -20,4 +20,26 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Ticket\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Ticket\Delete.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Ticket\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Ticket\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Ticket\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\User\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\User\Delete.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\User\Details.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\User\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\User\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\DestinationOld\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\DestinationOld\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="DestinationOld\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="DestinationOld\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\AdminPanel.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Views\Destination\Index.cshtml" />
+  </ItemGroup>
+
 </Project>
