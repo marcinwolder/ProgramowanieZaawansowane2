@@ -10,7 +10,6 @@ public class ConnectionSearchVM
 
 public class TicketInfo
 {
-    public int    TicketId     { get; set; }
     public string Passenger    { get; set; } = string.Empty;
     public string FromAirport  { get; set; } = string.Empty;
     public string ToAirport    { get; set; } = string.Empty;

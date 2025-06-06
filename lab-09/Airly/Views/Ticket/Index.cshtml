@@ -13,11 +13,10 @@
     @if (Model.Tickets.Any())
     {
         <div class="alert alert-success">
-            <h5 class="mb-3">Twoje bilety</h5>
+            <h5 class="mb-3">Your tickets</h5>
             <table class="table table-sm mb-0">
                 <thead class="table-light">
                 <tr>
-                    <th>#</th>
                     <th>Passenger</th>
                     <th>From</th>
                     <th>To</th>
@@ -27,7 +26,6 @@
                 @foreach (var t in Model.Tickets)
                 {
                     <tr>
-                        <td>@t.TicketId</td>
                         <td>@t.Passenger</td>
                         <td>@t.FromAirport</td>
                         <td>@t.ToAirport</td>
@@ -43,7 +41,7 @@
         <div class="col-md-4">
             <label class="form-label">Departure airport (A)</label>
             <select id="fromAirport" class="form-select"
-                    asp-items="ViewBag.DepartureAirports">
+                    asp-items="Model.DepartureAirports">
                 <option value="">-- choose --</option>
             </select>
         </div>

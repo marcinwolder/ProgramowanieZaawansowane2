@@ -20,33 +20,28 @@ public class TicketController : Controller
     [SessionAuthorize]
     public async Task<IActionResult> Index()
     {
-        var departureAirports = await _context.Connections
-            .Select(c => new { c.FromAirport!.Id, c.FromAirport.Name })
-            .Distinct()
+        var departureAirports = await _context.Airports
+            .Where(a => a.DepartingConnections!.Any())
             .OrderBy(a => a.Name)
+            .Select(a => new { a.Id, a.Name })
             .ToListAsync();
 
         var userId = HttpContext.Session.GetInt32("UserId");
         if (userId is null) return NotFound();
-
+        
         var tickets = await _context.Tickets
             .Include(t => t.Traveler)
-            .Include(t => t.Connection)
-            .ThenInclude(c => c!.FromAirport)
-            .Include(t => t.Connection)
-            .ThenInclude(c => c!.ToAirport)
+            .Include(t => t.Connection).ThenInclude(c => c!.FromAirport)
+            .Include(t => t.Connection).ThenInclude(c => c!.ToAirport)
             .Where(t => t.Traveler!.UserId == userId)
-            .Select(t => new TicketInfo
-            {
-                TicketId    = t.TravelerId,          // lub t.Id, jeśli dodałeś Id w Ticket
+            .Select(t => new TicketInfo {
                 Passenger   = $"{t.Traveler!.FirstName} {t.Traveler.LastName}",
                 FromAirport = t.Connection!.FromAirport!.Name,
                 ToAirport   = t.Connection.ToAirport!.Name
             })
             .ToListAsync();
 
-        var vm = new ConnectionSearchVM
-        {
+        var vm = new ConnectionSearchVM {
             DepartureAirports = new SelectList(departureAirports, "Id", "Name"),
             Tickets           = tickets
         };
